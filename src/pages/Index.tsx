@@ -112,10 +112,15 @@ const Index = () => {
 
       if (error) throw error;
 
-      // Fire-and-forget webhook forwarding (non-blocking UX).
-      void supabase.functions.invoke("forward-to-n8n", {
-        body: { submission_id: data.id },
-      });
+      // Forward to n8n (await so PDF/email pipeline starts before result screen).
+      // We do not block the result on a webhook error — n8n can be retried later.
+      try {
+        await supabase.functions.invoke("forward-to-n8n", {
+          body: { submission_id: data.id },
+        });
+      } catch (whErr) {
+        console.warn("webhook forward failed (non-blocking)", whErr);
+      }
 
       setWinner(result.winner);
       setStep("result");
