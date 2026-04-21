@@ -14,7 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      quiz_submissions: {
+        Row: {
+          answers: Json
+          archetype: string
+          consent_given: boolean
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          language: string
+          percentages: Json
+          referrer: string | null
+          scores: Json
+          user_agent: string | null
+          webhook_attempted_at: string | null
+          webhook_response: string | null
+          webhook_status: string
+        }
+        Insert: {
+          answers: Json
+          archetype: string
+          consent_given?: boolean
+          created_at?: string
+          email: string
+          first_name: string
+          id?: string
+          language?: string
+          percentages: Json
+          referrer?: string | null
+          scores: Json
+          user_agent?: string | null
+          webhook_attempted_at?: string | null
+          webhook_response?: string | null
+          webhook_status?: string
+        }
+        Update: {
+          answers?: Json
+          archetype?: string
+          consent_given?: boolean
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          language?: string
+          percentages?: Json
+          referrer?: string | null
+          scores?: Json
+          user_agent?: string | null
+          webhook_attempted_at?: string | null
+          webhook_response?: string | null
+          webhook_status?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
