@@ -508,17 +508,109 @@ const ResultScreen = ({
         📩 {copy.result.pdfNotice}
       </div>
 
-      <div className="flex flex-wrap gap-3">
-        <Button asChild variant="outline">
-          <a href={img} download={`mon-couple-aujourdhui-${archetype}.jpg`}>
-            {copy.result.share}
-          </a>
-        </Button>
+      <ShareBlock archetype={archetype} archetypeName={a.name} imageUrl={img} />
+
+      <p className="mt-10 text-xs text-muted-foreground/80 italic leading-relaxed">
+        {copy.result.disclaimer}
+      </p>
+
+      <div className="mt-8 flex flex-wrap gap-3">
         <Button variant="ghost" onClick={onRestart}>
           {copy.result.restart}
         </Button>
       </div>
     </section>
+  );
+};
+
+/* ---------- Share block ---------- */
+
+const ShareBlock = ({
+  archetype,
+  archetypeName,
+  imageUrl,
+}: {
+  archetype: ArchetypeId;
+  archetypeName: string;
+  imageUrl: string;
+}) => {
+  const { toast } = useToast();
+  const pageUrl =
+    typeof window !== "undefined"
+      ? window.location.origin + "/"
+      : "https://quiz.azwaj.be/";
+  const shareText = `${copy.result.shareText} Mon archétype : ${archetypeName}.`;
+  const encodedUrl = encodeURIComponent(pageUrl);
+  const encodedText = encodeURIComponent(shareText);
+
+  const track = (network: string) => {
+    try {
+      // @ts-expect-error window.umami is injected by the Umami script tag in index.html
+      window.umami?.track?.("quiz-share", { network, archetype });
+    } catch {
+      /* noop */
+    }
+  };
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(pageUrl);
+      toast({ title: copy.result.shareCopied });
+      track("copy");
+    } catch {
+      toast({
+        title: "Impossible de copier le lien",
+        variant: "destructive",
+      });
+    }
+  };
+
+  return (
+    <Card className="p-6 mb-4 border-border/70">
+      <h3 className="font-display text-xl mb-4 text-foreground">
+        {copy.result.shareTitle}
+      </h3>
+      <div className="flex flex-wrap gap-3">
+        <Button asChild variant="outline" onClick={() => track("whatsapp")}>
+          <a
+            href={`https://wa.me/?text=${encodedText}%20${encodedUrl}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {copy.result.shareWhatsapp}
+          </a>
+        </Button>
+        <Button asChild variant="outline" onClick={() => track("facebook")}>
+          <a
+            href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {copy.result.shareFacebook}
+          </a>
+        </Button>
+        <Button asChild variant="outline" onClick={() => track("linkedin")}>
+          <a
+            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {copy.result.shareLinkedin}
+          </a>
+        </Button>
+        <Button variant="outline" onClick={copyLink}>
+          {copy.result.shareCopy}
+        </Button>
+        <Button asChild variant="ghost" onClick={() => track("download-image")}>
+          <a
+            href={imageUrl}
+            download={`mon-couple-aujourdhui-${archetype}.jpg`}
+          >
+            {copy.result.share}
+          </a>
+        </Button>
+      </div>
+    </Card>
   );
 };
 

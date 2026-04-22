@@ -16,9 +16,26 @@ const Privacy = () => (
         <section>
           <h2 className="font-display text-2xl text-foreground mb-2">Qui sommes-nous ?</h2>
           <p>
-            « {copy.appName} » est un outil créé par Souade Taje, sexologue clinicienne
-            (formation UCL), spécialisée dans l'accompagnement des couples musulmans
-            francophones. Le site propose un quiz d'auto-évaluation de la dynamique de couple.
+            « {copy.appName} » est un outil édité par <strong>Souade Taje</strong>, sexologue
+            clinicienne (formation UCL), dans le cadre du projet Azwaj
+            (<a href="https://azwaj.be" className="underline hover:text-primary">azwaj.be</a>)
+            — plateforme d'accompagnement dédiée aux couples musulmans francophones
+            autour de l'intimité, de la communication conjugale et du lien entre foi et
+            relation. Le site propose un quiz d'auto-évaluation gratuit de la dynamique
+            de couple.
+          </p>
+          <p className="mt-3">
+            La politique de confidentialité complète du projet Azwaj est consultable
+            sur{" "}
+            <a
+              href="https://azwaj.be/politique-de-confidentialite/"
+              className="underline hover:text-primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              azwaj.be/politique-de-confidentialite
+            </a>
+            . La présente page en est un complément spécifique au quiz.
           </p>
         </section>
 
@@ -73,8 +90,11 @@ const Privacy = () => (
             <li>Désabonnement immédiat de la séquence email (lien dans chaque email)</li>
           </ul>
           <p className="mt-3">
-            Pour exercer ces droits, contactez-nous à l'adresse de contact
-            indiquée dans nos emails. Nous répondrons sous 30 jours maximum.
+            Pour exercer ces droits, écrivez à{" "}
+            <a href="mailto:salam@azwaj.be" className="underline hover:text-primary">
+              salam@azwaj.be
+            </a>
+            . Nous répondrons sous 30 jours maximum.
           </p>
         </section>
 

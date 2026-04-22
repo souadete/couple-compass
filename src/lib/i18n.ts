@@ -34,11 +34,21 @@ export const copy = {
     actions: "3 micro-actions cette semaine",
     pdfNotice:
       "Le PDF complet personnalisé vient d'être envoyé à votre adresse email. Pensez à vérifier vos spams.",
-    share: "Télécharger l'image de résultat",
+    share: "Télécharger l'image",
+    shareTitle: "Partager ce quiz",
+    shareWhatsapp: "WhatsApp",
+    shareFacebook: "Facebook",
+    shareLinkedin: "LinkedIn",
+    shareCopy: "Copier le lien",
+    shareCopied: "Lien copié ✓",
+    shareText:
+      "J'ai fait le quiz « Mon Couple Aujourd'hui » d'Azwaj — essayez, ça vaut le détour.",
+    disclaimer:
+      "Ce portrait est une lecture approximative basée sur vos réponses. Il n'a pas valeur de diagnostic médical ou psychologique. Pour un accompagnement personnalisé, vous pouvez me contacter.",
     restart: "Refaire le quiz",
   },
   footer: {
     privacy: "Confidentialité",
-    by: "Mon Couple Aujourd'hui — Souade Taje",
+    by: "Mon Couple Aujourd'hui — Souade Taje · Azwaj",
   },
 } as const;
