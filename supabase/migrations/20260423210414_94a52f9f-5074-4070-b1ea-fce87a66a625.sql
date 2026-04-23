@@ -1,0 +1,1 @@
+GRANT INSERT ON public.quiz_submissions TO anon, authenticated;
