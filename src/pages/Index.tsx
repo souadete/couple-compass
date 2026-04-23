@@ -1,19 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { z } from "zod";
+import { Clock, ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { copy } from "@/lib/i18n";
 import { QUESTIONS, type Choice } from "@/data/questions";
 import { ARCHETYPES, type ArchetypeId } from "@/data/archetypes";
 import { computeScore } from "@/lib/scoring";
 import { ARCHETYPE_IMAGES } from "@/data/archetype-images";
+import HeroVisual from "@/components/ambiance/HeroVisual";
+import GoldFrame from "@/components/ambiance/GoldFrame";
 
 type Step = "intro" | "quiz" | "capture" | "result";
 
@@ -147,7 +149,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-warm">
+    <div className="relative z-10 min-h-screen">
       <header className="container max-w-3xl py-6 flex items-center justify-between">
         <button
           onClick={restart}
@@ -214,39 +216,61 @@ const Index = () => {
 /* ---------- Intro ---------- */
 
 const IntroScreen = ({ onStart }: { onStart: () => void }) => (
-  <section className="pt-8 md:pt-16 animate-in fade-in duration-500">
-    <p className="text-sm uppercase tracking-[0.25em] text-primary/80 mb-4">
-      Quiz couple — 5 minutes
-    </p>
-    <h1 className="font-display text-4xl md:text-5xl leading-tight text-foreground mb-5">
-      {copy.hero.title}
-    </h1>
-    <p className="text-lg text-muted-foreground mb-8 max-w-xl">
+  <section className="pt-4 md:pt-10 animate-in fade-in duration-500">
+    {/* Hero visual — silhouettes + golden halo */}
+    <div className="flex justify-center mb-6 md:mb-8">
+      <HeroVisual className="w-full max-w-2xl h-auto opacity-80" />
+    </div>
+
+    {/* Gold pill badge */}
+    <div className="flex justify-center mb-5">
+      <span className="inline-flex items-center gap-2 rounded-full border border-secondary/40 bg-secondary/15 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-secondary-foreground/90">
+        <Clock className="h-3.5 w-3.5 text-secondary" aria-hidden />
+        Quiz couple — 5 minutes
+      </span>
+    </div>
+
+    {/* H1 wrapped in gold frame */}
+    <div className="relative mx-auto max-w-2xl px-6 md:px-10 py-6 md:py-8 mb-6 text-center">
+      <GoldFrame />
+      <h1 className="relative font-display text-3xl md:text-5xl leading-tight text-foreground">
+        {copy.hero.title}
+      </h1>
+    </div>
+
+    <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto text-center">
       {copy.hero.subtitle}
     </p>
 
-    <ul className="space-y-3 mb-10">
+    <ul className="space-y-3 mb-10 max-w-xl mx-auto">
       {copy.hero.bullets.map((b) => (
         <li key={b} className="flex items-start gap-3 text-foreground/90">
           <span
             aria-hidden
-            className="mt-2 inline-block h-1.5 w-1.5 rounded-full bg-primary shrink-0"
+            className="mt-2 inline-block h-1.5 w-1.5 rounded-full bg-secondary shrink-0"
           />
           <span>{b}</span>
         </li>
       ))}
     </ul>
 
-    <Button
-      size="lg"
-      onClick={onStart}
-      className="bg-gradient-terracotta text-primary-foreground shadow-soft hover:opacity-95 px-8 h-12 text-base"
-    >
-      {copy.hero.cta}
-    </Button>
+    <div className="flex justify-center">
+      <Button
+        size="lg"
+        onClick={onStart}
+        className="bg-gradient-terracotta text-primary-foreground shadow-soft hover:opacity-95 hover:shadow-gold px-10 h-12 text-base transition-all"
+      >
+        {copy.hero.cta}
+      </Button>
+    </div>
 
-    <p className="mt-10 text-sm text-muted-foreground italic max-w-xl">
+    <p className="mt-10 text-sm text-muted-foreground italic max-w-xl mx-auto text-center">
       {copy.hero.signature}
+    </p>
+
+    <p className="mt-4 flex items-center justify-center gap-2 text-xs text-muted-foreground/80">
+      <ShieldCheck className="h-3.5 w-3.5 text-secondary/70" aria-hidden />
+      Anonyme · données stockées en Europe (RGPD)
     </p>
   </section>
 );
@@ -272,37 +296,54 @@ const QuizScreen = ({
   return (
     <section className="pt-8 animate-in fade-in duration-300">
       <div className="flex items-center justify-between mb-3 text-xs text-muted-foreground">
-        <span>
+        <span className="font-medium">
           Question {qIndex + 1} / {total}
         </span>
-        <span>{progress}%</span>
+        <span className="text-secondary-foreground/80 font-medium">{progress}%</span>
       </div>
-      <Progress value={progress} className="mb-10 h-1.5 bg-muted" />
+      {/* Custom gold progress bar — replaces shadcn Progress for Azwaj signature */}
+      <div
+        className="mb-10 h-1.5 w-full overflow-hidden rounded-full bg-muted"
+        role="progressbar"
+        aria-valuenow={progress}
+        aria-valuemin={0}
+        aria-valuemax={100}
+      >
+        <div
+          className="h-full bg-gradient-gold transition-[width] duration-500 ease-out"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
 
-      <h2 className="font-display text-2xl md:text-3xl mb-8 text-foreground leading-snug">
-        {q.text}
-      </h2>
+      {/* Keyed wrapper forces slide animation on each question change */}
+      <div key={qIndex} className="slide-in-right">
+        <h2 className="font-display text-2xl md:text-3xl mb-8 text-foreground leading-snug">
+          {q.text}
+        </h2>
 
-      <div className="space-y-3">
-        {q.options.map((opt) => {
-          const selected = currentAnswer === opt.key;
-          return (
-            <button
-              key={opt.key}
-              onClick={() => onAnswer(opt.key)}
-              className={[
-                "w-full text-left rounded-xl border px-5 py-4 transition-all",
-                "shadow-sm hover:shadow-soft hover:-translate-y-0.5",
-                selected
-                  ? "bg-primary/10 border-primary text-foreground"
-                  : "bg-card border-border hover:border-primary/40",
-              ].join(" ")}
-            >
-              <span className="font-medium text-sm text-primary mr-3">{opt.key}.</span>
-              <span className="text-foreground/90">{opt.label}</span>
-            </button>
-          );
-        })}
+        <div className="space-y-3">
+          {q.options.map((opt) => {
+            const selected = currentAnswer === opt.key;
+            return (
+              <button
+                key={opt.key}
+                onClick={() => onAnswer(opt.key)}
+                className={[
+                  "option-btn w-full text-left rounded-xl border px-5 py-4 bg-card",
+                  "shadow-sm",
+                  selected
+                    ? "border-primary bg-primary/10 text-foreground ring-1 ring-primary/40"
+                    : "border-border",
+                ].join(" ")}
+              >
+                <span className="font-medium text-sm text-secondary-foreground mr-3 font-display">
+                  {opt.key}.
+                </span>
+                <span className="text-foreground/90">{opt.label}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <div className="mt-10">
@@ -337,11 +378,21 @@ const CaptureScreen = ({
   setConsent: (v: boolean) => void;
   onSubmit: () => void;
 }) => (
-  <section className="pt-8 max-w-lg animate-in fade-in duration-500">
-    <h2 className="font-display text-3xl mb-3 text-foreground">{copy.capture.title}</h2>
-    <p className="text-muted-foreground mb-8">{copy.capture.subtitle}</p>
+  <section className="pt-8 max-w-lg mx-auto animate-in fade-in duration-500">
+    {/* Reassuring hint — soft gold pill */}
+    <div className="flex justify-center mb-5">
+      <span className="inline-flex items-center gap-2 rounded-full bg-secondary/15 border border-secondary/30 px-3.5 py-1 text-xs text-secondary-foreground/90">
+        <ShieldCheck className="h-3.5 w-3.5 text-secondary" aria-hidden />
+        Ton portrait est prêt à être envoyé
+      </span>
+    </div>
 
-    <Card className="p-6 md:p-8 shadow-card border-border/70">
+    <h2 className="font-display text-3xl mb-3 text-foreground text-center">
+      {copy.capture.title}
+    </h2>
+    <p className="text-muted-foreground mb-8 text-center">{copy.capture.subtitle}</p>
+
+    <Card className="p-6 md:p-8 shadow-card border-border/70 bg-card/90 backdrop-blur-sm">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -357,7 +408,7 @@ const CaptureScreen = ({
             onChange={(e) => setFirstName(e.target.value)}
             maxLength={80}
             autoComplete="given-name"
-            className="mt-1.5"
+            className="mt-1.5 focus-gold"
           />
           {errors.firstName && (
             <p className="text-sm text-destructive mt-1">{errors.firstName}</p>
@@ -373,7 +424,7 @@ const CaptureScreen = ({
             onChange={(e) => setEmail(e.target.value)}
             maxLength={255}
             autoComplete="email"
-            className="mt-1.5"
+            className="mt-1.5 focus-gold"
           />
           {errors.email && (
             <p className="text-sm text-destructive mt-1">{errors.email}</p>
@@ -408,9 +459,9 @@ const CaptureScreen = ({
         <Button
           type="submit"
           disabled={submitting}
-          className="w-full bg-gradient-terracotta text-primary-foreground h-12 text-base"
+          className="w-full bg-gradient-terracotta text-primary-foreground h-12 text-base shadow-soft hover:shadow-gold transition-shadow"
         >
-          {submitting ? "Envoi…" : copy.capture.submit}
+          {submitting ? "Ton portrait se prépare…" : copy.capture.submit}
         </Button>
       </form>
     </Card>
@@ -431,25 +482,33 @@ const ResultScreen = ({
   const a = ARCHETYPES[archetype];
   const img = ARCHETYPE_IMAGES[archetype];
   return (
-    <section className="pt-8 animate-in fade-in duration-500">
-      <p className="text-sm uppercase tracking-[0.25em] text-primary/80 mb-3">
+    <section className="pt-8">
+      <p className="reveal-step text-sm uppercase tracking-[0.25em] text-secondary-foreground/80 mb-3">
         {firstName ? `${firstName}, votre archétype` : copy.result.yourArchetype}
       </p>
-      <h2 className="font-display text-4xl md:text-5xl text-foreground mb-6">
+      <h2 className="reveal-step delay-1 font-display text-4xl md:text-5xl text-foreground mb-6">
         {a.name}
       </h2>
 
-      <Card className="overflow-hidden shadow-card border-border/70 mb-8">
-        <img
-          src={img}
-          alt={`Visuel de l'archétype ${a.name}`}
-          width={1024}
-          height={1024}
-          className="w-full aspect-square object-cover"
-        />
-      </Card>
+      <div className="reveal-step delay-2 relative mb-8">
+        {/* Golden frame hugging the archetype image */}
+        <div className="pointer-events-none absolute -inset-2 md:-inset-3">
+          <GoldFrame />
+        </div>
+        <Card className="relative overflow-hidden shadow-card border-border/70">
+          <img
+            src={img}
+            alt={`Visuel de l'archétype ${a.name}`}
+            width={1024}
+            height={1024}
+            className="w-full aspect-square object-cover"
+          />
+        </Card>
+      </div>
 
-      <p className="text-lg text-foreground/90 mb-10 leading-relaxed">{a.description}</p>
+      <p className="reveal-step delay-3 text-lg text-foreground/90 mb-10 leading-relaxed">
+        {a.description}
+      </p>
 
       <div className="grid md:grid-cols-2 gap-5 mb-8">
         <Card className="p-6 bg-secondary-soft border-secondary/30">
