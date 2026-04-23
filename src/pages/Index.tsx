@@ -14,6 +14,7 @@ import { copy } from "@/lib/i18n";
 import { QUESTIONS, type Choice } from "@/data/questions";
 import { ARCHETYPES, type ArchetypeId } from "@/data/archetypes";
 import { computeScore } from "@/lib/scoring";
+import { shuffleArray } from "@/lib/shuffle";
 import { ARCHETYPE_IMAGES } from "@/data/archetype-images";
 import HeroVisual from "@/components/ambiance/HeroVisual";
 import GoldFrame from "@/components/ambiance/GoldFrame";
@@ -58,6 +59,17 @@ const Index = () => {
   const progress = useMemo(
     () => Math.round(((qIndex + (answers[qIndex] ? 1 : 0)) / QUESTIONS.length) * 100),
     [qIndex, answers],
+  );
+
+  // Shuffle options per question ONCE per session, stable across navigations.
+  // Scoring is unaffected because it uses opt.key (A/B/C/D tied to score).
+  const shuffledQuestions = useMemo(
+    () =>
+      QUESTIONS.map((q) => ({
+        ...q,
+        options: shuffleArray(q.options),
+      })),
+    [],
   );
 
   const handleAnswer = (choice: Choice) => {
@@ -172,6 +184,7 @@ const Index = () => {
 
         {step === "quiz" && (
           <QuizScreen
+            question={shuffledQuestions[qIndex]}
             qIndex={qIndex}
             total={QUESTIONS.length}
             progress={progress}
@@ -277,6 +290,7 @@ const IntroScreen = ({ onStart }: { onStart: () => void }) => (
 /* ---------- Quiz ---------- */
 
 const QuizScreen = ({
+  question,
   qIndex,
   total,
   progress,
@@ -284,6 +298,7 @@ const QuizScreen = ({
   onAnswer,
   onBack,
 }: {
+  question: typeof QUESTIONS[number];
   qIndex: number;
   total: number;
   progress: number;
@@ -291,7 +306,7 @@ const QuizScreen = ({
   onAnswer: (c: Choice) => void;
   onBack: () => void;
 }) => {
-  const q = QUESTIONS[qIndex];
+  const q = question;
   return (
     <section className="pt-8 animate-in fade-in duration-300">
       <div className="flex items-center justify-between mb-3 text-xs text-muted-foreground">
@@ -321,8 +336,11 @@ const QuizScreen = ({
         </h2>
 
         <div className="space-y-3">
-          {q.options.map((opt) => {
+          {q.options.map((opt, idx) => {
             const selected = currentAnswer === opt.key;
+            // Visual position letter (A/B/C/D) based on shuffled display order,
+            // NOT opt.key which is tied to scoring.
+            const visualLetter = String.fromCharCode(65 + idx);
             return (
               <button
                 key={opt.key}
@@ -336,7 +354,7 @@ const QuizScreen = ({
                 ].join(" ")}
               >
                 <span className="font-medium text-sm text-secondary-foreground mr-3 font-display">
-                  {opt.key}.
+                  {visualLetter}.
                 </span>
                 <span className="text-foreground/90">{opt.label}</span>
               </button>
