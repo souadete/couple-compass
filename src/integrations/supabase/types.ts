@@ -73,6 +73,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_quiz_stats: { Args: never; Returns: Json }
       submit_quiz: {
         Args: {
           p_answers: Json
