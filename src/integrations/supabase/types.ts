@@ -73,7 +73,21 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      submit_quiz: {
+        Args: {
+          p_answers: Json
+          p_archetype: string
+          p_consent_given: boolean
+          p_email: string
+          p_first_name: string
+          p_language?: string
+          p_percentages: Json
+          p_referrer?: string
+          p_scores: Json
+          p_user_agent?: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
