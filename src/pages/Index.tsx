@@ -95,24 +95,22 @@ const Index = () => {
       const finalAnswers = answers as Choice[];
       const result = computeScore(finalAnswers);
 
-      const { data, error } = await supabase
-        .from("quiz_submissions")
-        .insert({
-          first_name: parsed.data.firstName,
-          email: parsed.data.email,
-          consent_given: true,
-          answers: finalAnswers,
-          archetype: result.winner,
-          scores: result.scores,
-          percentages: result.percentages,
-          language: "fr",
-          user_agent: navigator.userAgent.slice(0, 500),
-          referrer: document.referrer.slice(0, 500) || null,
-        })
-        .select("id")
-        .single();
+      const { data: submissionId, error } = await supabase.rpc("submit_quiz", {
+        p_first_name: parsed.data.firstName,
+        p_email: parsed.data.email,
+        p_consent_given: true,
+        p_answers: finalAnswers,
+        p_archetype: result.winner,
+        p_scores: result.scores,
+        p_percentages: result.percentages,
+        p_language: "fr",
+        p_user_agent: navigator.userAgent.slice(0, 500),
+        p_referrer: document.referrer.slice(0, 500) || null,
+      });
 
       if (error) throw error;
+
+      const data = { id: submissionId as string };
 
       // Forward to n8n (await so PDF/email pipeline starts before result screen).
       // We do not block the result on a webhook error — n8n can be retried later.
