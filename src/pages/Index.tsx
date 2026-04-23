@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { z } from "zod";
-import { Clock, ShieldCheck } from "lucide-react";
+import { Clock, ShieldCheck, Link2, Download } from "lucide-react";
+import { WhatsAppIcon, FacebookIcon, LinkedInIcon } from "@/components/ShareIcons";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -627,43 +628,82 @@ const ShareBlock = ({
       <h3 className="font-display text-xl mb-4 text-foreground">
         {copy.result.shareTitle}
       </h3>
-      <div className="flex flex-wrap gap-3">
-        <Button asChild variant="outline" onClick={() => track("whatsapp")}>
+      <div className="flex flex-wrap gap-3 items-center">
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          onClick={() => track("whatsapp")}
+          aria-label={copy.result.shareWhatsapp}
+          className="gap-2"
+        >
           <a
             href={`https://wa.me/?text=${encodedText}%20${encodedUrl}`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            {copy.result.shareWhatsapp}
+            <WhatsAppIcon className="h-5 w-5" />
+            <span className="hidden sm:inline">{copy.result.shareWhatsapp}</span>
           </a>
         </Button>
-        <Button asChild variant="outline" onClick={() => track("facebook")}>
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          onClick={() => track("facebook")}
+          aria-label={copy.result.shareFacebook}
+          className="gap-2"
+        >
           <a
             href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            {copy.result.shareFacebook}
+            <FacebookIcon className="h-5 w-5" />
+            <span className="hidden sm:inline">{copy.result.shareFacebook}</span>
           </a>
         </Button>
-        <Button asChild variant="outline" onClick={() => track("linkedin")}>
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          onClick={() => track("linkedin")}
+          aria-label={copy.result.shareLinkedin}
+          className="gap-2"
+        >
           <a
             href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            {copy.result.shareLinkedin}
+            <LinkedInIcon className="h-5 w-5" />
+            <span className="hidden sm:inline">{copy.result.shareLinkedin}</span>
           </a>
         </Button>
-        <Button variant="outline" onClick={copyLink}>
-          {copy.result.shareCopy}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={copyLink}
+          aria-label={copy.result.shareCopy}
+          className="gap-2"
+        >
+          <Link2 className="h-4 w-4" aria-hidden />
+          <span className="hidden sm:inline">{copy.result.shareCopy}</span>
         </Button>
-        <Button asChild variant="ghost" onClick={() => track("download-image")}>
+        <Button
+          asChild
+          variant="ghost"
+          size="sm"
+          onClick={() => track("download-image")}
+          aria-label={copy.result.share}
+          className="gap-2"
+        >
           <a
             href={imageUrl}
             download={`mon-couple-aujourdhui-${archetype}.jpg`}
           >
-            {copy.result.share}
+            <Download className="h-4 w-4" aria-hidden />
+            <span className="hidden sm:inline">{copy.result.share}</span>
           </a>
         </Button>
       </div>
