@@ -98,10 +98,10 @@ export const QUESTIONS: Question[] = [
     id: 5,
     text: "Votre intimité physique (baisers, tendresse, sexualité) est actuellement :",
     options: [
-      { key: "A", label: "Régulière et satisfaisante" },
-      { key: "B", label: "Irrégulière mais présente" },
-      { key: "C", label: "Rare" },
-      { key: "D", label: "Quasi absente ou douloureuse" },
+      { key: "A", label: "Fréquente et partagée avec plaisir" },
+      { key: "B", label: "Variable, mais globalement partagée" },
+      { key: "C", label: "Trop espacée à notre goût" },
+      { key: "D", label: "Rare, inexistante ou difficile" },
     ],
   },
   {
