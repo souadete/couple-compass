@@ -75,8 +75,8 @@ Deno.serve(async (req) => {
     const payload = {
       prenom: submission.first_name,
       email: submission.email,
-      archetype: ARCHETYPE_TO_PASCAL[submission.archetype] ?? submission.archetype,
-      scores: toPascalScores(submission.scores),
+      archetype: submission.archetype,
+      scores: submission.scores,
       responses: toResponses(submission.answers),
       timestamp: new Date().toISOString(),
       consent_rgpd: submission.consent_given === true,
