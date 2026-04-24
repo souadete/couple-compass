@@ -1,0 +1,1 @@
+GRANT INSERT, UPDATE, SELECT ON public.quiz_v2_email_templates TO sandbox_exec;
