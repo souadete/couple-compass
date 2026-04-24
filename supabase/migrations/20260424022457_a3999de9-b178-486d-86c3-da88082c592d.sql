@@ -1,0 +1,1 @@
+REVOKE UPDATE ON public.quiz_v2_email_templates FROM sandbox_exec;
