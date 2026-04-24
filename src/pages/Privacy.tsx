@@ -44,7 +44,7 @@ const Privacy = () => (
           <ul className="list-disc pl-5 space-y-1">
             <li>Votre prénom</li>
             <li>Votre adresse email</li>
-            <li>Vos réponses aux 15 questions du quiz</li>
+            <li>Vos réponses aux 21 questions du quiz</li>
             <li>Votre archétype calculé et le score détaillé</li>
             <li>Des informations techniques minimales (langue, navigateur, page d'origine)</li>
           </ul>

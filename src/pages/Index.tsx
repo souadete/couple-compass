@@ -246,7 +246,7 @@ const IntroScreen = ({ onStart }: { onStart: () => void }) => (
     <div className="flex justify-center mb-5">
       <span className="inline-flex items-center gap-2 rounded-full border border-secondary/40 bg-secondary/15 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-secondary-foreground/90">
         <Clock className="h-3.5 w-3.5 text-secondary" aria-hidden />
-        Quiz couple — 5 minutes
+        Quiz couple — 5 à 7 minutes
       </span>
     </div>
 

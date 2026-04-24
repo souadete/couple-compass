@@ -5,9 +5,9 @@ export const copy = {
   hero: {
     title: "Quel est l'état de votre couple aujourd'hui ?",
     subtitle:
-      "15 questions, 5 minutes — un portrait honnête et bienveillant, sans jugement.",
+      "21 questions, 5 à 7 minutes — un portrait clinique, honnête et bienveillant, sans jugement.",
     bullets: [
-      "Découvrez votre archétype parmi 6 profils de couples musulmans",
+      "Découvrez votre archétype parmi 7 profils de couples musulmans",
       "Recevez un PDF personnalisé avec pistes concrètes et références spirituelles",
       "100 % anonyme — aucune donnée partagée",
     ],
@@ -22,7 +22,7 @@ export const copy = {
     firstName: "Prénom",
     email: "Adresse email",
     consent:
-      "J'accepte de recevoir mon PDF par email et la séquence d'accompagnement (5 emails sur 12 jours). Mes données sont stockées en Europe et ne sont jamais partagées avec des tiers.",
+      "J'accepte de recevoir mon PDF par email et la séquence d'accompagnement adaptée à mon archétype. Mes données sont stockées en Europe et ne sont jamais partagées avec des tiers.",
     privacyLink: "Politique de confidentialité",
     submit: "Voir mon résultat",
   },
