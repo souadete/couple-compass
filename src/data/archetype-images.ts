@@ -4,6 +4,7 @@ import debordesImg from "@/assets/archetype-debordes.png";
 import enConstructionImg from "@/assets/archetype-en-construction.png";
 import complicesImg from "@/assets/archetype-complices-fatigues.png";
 import survivantsImg from "@/assets/archetype-survivants.png";
+import harmonieuxImg from "@/assets/archetype-harmonieux.png";
 import type { ArchetypeId } from "@/data/archetypes";
 
 export const ARCHETYPE_IMAGES: Record<ArchetypeId, string> = {
@@ -13,4 +14,5 @@ export const ARCHETYPE_IMAGES: Record<ArchetypeId, string> = {
   "en-construction": enConstructionImg,
   "complices-fatigues": complicesImg,
   survivants: survivantsImg,
+  harmonieux: harmonieuxImg,
 };

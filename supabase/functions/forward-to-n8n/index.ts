@@ -85,6 +85,7 @@ Deno.serve(async (req) => {
     let status = "ok";
     let responseText = "";
     let httpStatus = 0;
+    let pdfUrl: string | null = null;
     try {
       const r = await fetch(N8N_WEBHOOK_URL, {
         method: "POST",
@@ -92,20 +93,34 @@ Deno.serve(async (req) => {
         body: JSON.stringify(payload),
       });
       httpStatus = r.status;
-      responseText = (await r.text()).slice(0, 500);
+      const rawText = await r.text();
+      responseText = rawText.slice(0, 500);
       if (!r.ok) status = `http_${r.status}`;
+      // Parse n8n response for pdf_url (n8n workflow returns { pdf_url, ... } on success)
+      try {
+        const parsed = JSON.parse(rawText);
+        if (parsed && typeof parsed.pdf_url === "string" && parsed.pdf_url.length > 10) {
+          pdfUrl = parsed.pdf_url;
+        } else if (Array.isArray(parsed) && parsed[0]?.pdf_url) {
+          pdfUrl = parsed[0].pdf_url;
+        }
+      } catch { /* not JSON */ }
     } catch (e) {
       status = "fetch_error";
       responseText = String(e).slice(0, 500);
     }
 
+    // Update submission with webhook status + pdf_url (if returned by n8n)
+    const updatePayload: Record<string, unknown> = {
+      webhook_status: status,
+      webhook_attempted_at: new Date().toISOString(),
+      webhook_response: responseText,
+    };
+    if (pdfUrl) updatePayload.pdf_url = pdfUrl;
+
     await supabase
       .from("quiz_submissions")
-      .update({
-        webhook_status: status,
-        webhook_attempted_at: new Date().toISOString(),
-        webhook_response: responseText,
-      })
+      .update(updatePayload)
       .eq("id", body.submission_id);
 
     // Enqueue the 5 Resend-driven nurture emails (idempotent via ON CONFLICT).
@@ -130,6 +145,7 @@ Deno.serve(async (req) => {
         http_status: httpStatus,
         enqueued,
         enqueue_error: enqueueErr,
+        pdf_url: pdfUrl,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );

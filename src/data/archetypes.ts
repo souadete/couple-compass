@@ -4,7 +4,8 @@ export type ArchetypeId =
   | "debordes"
   | "en-construction"
   | "complices-fatigues"
-  | "survivants";
+  | "survivants"
+  | "harmonieux";
 
 export interface Archetype {
   id: ArchetypeId;
@@ -162,9 +163,37 @@ export const ARCHETYPES: Record<ArchetypeId, Archetype> = {
       "Temps long, petits pas — ne pas tout vouloir récupérer en une fois",
     ],
   },
+  harmonieux: {
+    id: "harmonieux",
+    name: "Les Harmonieux",
+    shortLabel: "Harmonieux",
+    description:
+      "Votre couple fonctionne. Vous communiquez, vous vous respectez, vous cheminez ensemble — dans l'intime comme dans le quotidien. Ce n'est pas de la chance : c'est le fruit d'une attention constante que vous portez à votre lien. Félicitations.",
+    forces: [
+      "Dialogue ouvert et ajusté mutuellement",
+      "Intimité vivante (émotionnelle, physique, spirituelle)",
+      "Résilience dyadique face aux épreuves",
+      "Projets et rêves partagés",
+    ],
+    challenges: [
+      "L'équilibre reste un mouvement — pas un acquis définitif",
+      "Les phases de la vie (enfants, crises, ménopause, transitions pro) testeront ces bases",
+      "Ne pas tenir la complicité pour acquise — c'est ce qui la maintient",
+    ],
+    spiritual:
+      "Ce que vous vivez est une manifestation de la mawaddah wa rahma décrite dans le Coran (Ar-Rûm 30:21). Ce n'est pas un accomplissement final, c'est une barakah à entretenir chaque jour par l'attention, le dialogue et la douʿa l'un pour l'autre.",
+    actions: [
+      "Continuez vos rituels de reconnexion — ne les laissez pas s'éroder par le confort",
+      "Faites un bilan annuel à deux (rétrospective + intentions) — comme un « check-up » du couple",
+      "Partagez votre expérience autour de vous avec humilité : vos exemples inspirent d'autres couples",
+    ],
+  },
 };
 
 // Tie-break order: most "urgent" archetypes win in case of equal score.
+// NOTE: "harmonieux" n'apparaît PAS dans cet ordre — il est géré séparément
+// dans scoring.ts avec la règle "gagne seulement si score > max_autres + 3"
+// pour éviter qu'un couple avec des signaux d'alerte tombe par défaut dans ce profil sain.
 export const TIE_BREAK_ORDER: ArchetypeId[] = [
   "survivants",
   "debordes",
@@ -173,3 +202,7 @@ export const TIE_BREAK_ORDER: ArchetypeId[] = [
   "silencieux",
   "complices-fatigues",
 ];
+
+// Gap minimum requis pour que "Harmonieux" l'emporte sur le plus haut archétype problématique.
+// Sinon, fallback sur le tie-break standard.
+export const HARMONIEUX_MIN_GAP = 3;
