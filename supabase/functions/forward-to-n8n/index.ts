@@ -108,8 +108,29 @@ Deno.serve(async (req) => {
       })
       .eq("id", body.submission_id);
 
+    // Enqueue the 5 Resend-driven nurture emails (idempotent via ON CONFLICT).
+    // Failure here is non-blocking — n8n cron will retry, and we log the error.
+    let enqueued = 0;
+    let enqueueErr: string | null = null;
+    try {
+      const { data: enq, error: enqError } = await supabase.rpc(
+        "enqueue_quiz_v2_emails",
+        { p_submission_id: body.submission_id },
+      );
+      if (enqError) enqueueErr = enqError.message;
+      else enqueued = typeof enq === "number" ? enq : 0;
+    } catch (e) {
+      enqueueErr = String(e).slice(0, 300);
+    }
+
     return new Response(
-      JSON.stringify({ ok: status === "ok", status, http_status: httpStatus }),
+      JSON.stringify({
+        ok: status === "ok",
+        status,
+        http_status: httpStatus,
+        enqueued,
+        enqueue_error: enqueueErr,
+      }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (e) {
