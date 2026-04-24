@@ -133,6 +133,36 @@ export type Database = {
           },
         ]
       }
+      quiz_v2_email_templates: {
+        Row: {
+          archetype: string
+          day_delay: number
+          html: string
+          mail_code: string
+          preheader: string | null
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          archetype: string
+          day_delay: number
+          html: string
+          mail_code: string
+          preheader?: string | null
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          archetype?: string
+          day_delay?: number
+          html?: string
+          mail_code?: string
+          preheader?: string | null
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -144,6 +174,15 @@ export type Database = {
       }
       get_quiz_stats: { Args: never; Returns: Json }
       get_quiz_v2_email_stats: { Args: never; Returns: Json }
+      get_quiz_v2_email_template: {
+        Args: { p_mail_code: string }
+        Returns: {
+          html: string
+          mail_code: string
+          preheader: string
+          subject: string
+        }[]
+      }
       get_quiz_v2_ready_emails: {
         Args: { p_limit?: number }
         Returns: {
