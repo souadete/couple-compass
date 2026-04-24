@@ -74,6 +74,16 @@ export type Database = {
     }
     Functions: {
       get_quiz_stats: { Args: never; Returns: Json }
+      get_retryable_submission_ids: {
+        Args: never
+        Returns: {
+          archetype: string
+          created_at: string
+          email: string
+          id: string
+          webhook_status: string
+        }[]
+      }
       submit_quiz: {
         Args: {
           p_answers: Json
