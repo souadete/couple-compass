@@ -24,6 +24,7 @@ export type Database = {
           first_name: string
           id: string
           language: string
+          pdf_url: string | null
           percentages: Json
           referrer: string | null
           scores: Json
@@ -41,6 +42,7 @@ export type Database = {
           first_name: string
           id?: string
           language?: string
+          pdf_url?: string | null
           percentages: Json
           referrer?: string | null
           scores: Json
@@ -58,6 +60,7 @@ export type Database = {
           first_name?: string
           id?: string
           language?: string
+          pdf_url?: string | null
           percentages?: Json
           referrer?: string | null
           scores?: Json
@@ -193,6 +196,7 @@ export type Database = {
           first_name: string
           id: string
           mail_code: string
+          pdf_url: string
           send_at: string
           submission_id: string
           unsub_token: string
@@ -237,6 +241,10 @@ export type Database = {
           affected_email: string
           affected_rows: number
         }[]
+      }
+      update_submission_pdf_url: {
+        Args: { p_id: string; p_pdf_url: string }
+        Returns: undefined
       }
     }
     Enums: {
