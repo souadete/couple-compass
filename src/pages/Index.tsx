@@ -18,6 +18,7 @@ import { shuffleArray } from "@/lib/shuffle";
 import { ARCHETYPE_IMAGES } from "@/data/archetype-images";
 import HeroVisual from "@/components/ambiance/HeroVisual";
 import GoldFrame from "@/components/ambiance/GoldFrame";
+import azwajLogo from "@/assets/azwaj-logo.png";
 
 type Step = "intro" | "quiz" | "capture" | "result";
 
@@ -164,10 +165,17 @@ const Index = () => {
       <header className="container max-w-3xl py-6 flex items-center justify-between">
         <button
           onClick={restart}
-          className="font-display text-xl text-foreground/90 hover:text-primary transition"
+          className="flex items-center gap-3 transition hover:opacity-80"
+          aria-label={`${copy.appName} — ${copy.tagline}`}
         >
-          {copy.appName}
-          <span className="ml-2 text-xs uppercase tracking-widest text-muted-foreground font-sans">
+          <img
+            src={azwajLogo}
+            alt="Azwaj"
+            width={140}
+            height={28}
+            className="h-7 w-auto"
+          />
+          <span className="hidden sm:inline text-xs uppercase tracking-widest text-muted-foreground font-sans">
             {copy.tagline}
           </span>
         </button>
