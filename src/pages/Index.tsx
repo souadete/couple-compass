@@ -171,9 +171,9 @@ const Index = () => {
           <img
             src={azwajLogo}
             alt="Azwaj"
-            width={140}
-            height={28}
-            className="h-7 w-auto"
+            width={220}
+            height={44}
+            className="h-11 w-auto"
           />
           <span className="hidden sm:inline text-xs uppercase tracking-widest text-muted-foreground font-sans">
             {copy.tagline}
