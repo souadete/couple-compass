@@ -68,12 +68,154 @@ export type Database = {
         }
         Relationships: []
       }
+      quiz_v2_email_queue: {
+        Row: {
+          archetype: string
+          attempt_count: number
+          created_at: string
+          day_delay: number
+          email: string
+          error_message: string | null
+          first_name: string
+          id: string
+          last_attempt_at: string | null
+          mail_code: string
+          resend_message_id: string | null
+          send_at: string
+          sent_at: string | null
+          submission_id: string
+          unsub_token: string
+          unsubscribed_at: string | null
+        }
+        Insert: {
+          archetype: string
+          attempt_count?: number
+          created_at?: string
+          day_delay: number
+          email: string
+          error_message?: string | null
+          first_name: string
+          id?: string
+          last_attempt_at?: string | null
+          mail_code: string
+          resend_message_id?: string | null
+          send_at: string
+          sent_at?: string | null
+          submission_id: string
+          unsub_token?: string
+          unsubscribed_at?: string | null
+        }
+        Update: {
+          archetype?: string
+          attempt_count?: number
+          created_at?: string
+          day_delay?: number
+          email?: string
+          error_message?: string | null
+          first_name?: string
+          id?: string
+          last_attempt_at?: string | null
+          mail_code?: string
+          resend_message_id?: string | null
+          send_at?: string
+          sent_at?: string | null
+          submission_id?: string
+          unsub_token?: string
+          unsubscribed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_v2_email_queue_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_v2_email_templates: {
+        Row: {
+          archetype: string
+          day_delay: number
+          html: string
+          mail_code: string
+          preheader: string | null
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          archetype: string
+          day_delay: number
+          html: string
+          mail_code: string
+          preheader?: string | null
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          archetype?: string
+          day_delay?: number
+          html?: string
+          mail_code?: string
+          preheader?: string | null
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      enqueue_quiz_v2_emails: {
+        Args: { p_submission_id: string }
+        Returns: number
+      }
       get_quiz_stats: { Args: never; Returns: Json }
+      get_quiz_v2_email_stats: { Args: never; Returns: Json }
+      get_quiz_v2_email_template: {
+        Args: { p_mail_code: string }
+        Returns: {
+          html: string
+          mail_code: string
+          preheader: string
+          subject: string
+        }[]
+      }
+      get_quiz_v2_ready_emails: {
+        Args: { p_limit?: number }
+        Returns: {
+          archetype: string
+          attempt_count: number
+          day_delay: number
+          email: string
+          first_name: string
+          id: string
+          mail_code: string
+          send_at: string
+          submission_id: string
+          unsub_token: string
+        }[]
+      }
+      get_retryable_submission_ids: {
+        Args: never
+        Returns: {
+          archetype: string
+          created_at: string
+          email: string
+          id: string
+          webhook_status: string
+        }[]
+      }
+      mark_quiz_v2_email_failed: {
+        Args: { p_error: string; p_id: string }
+        Returns: undefined
+      }
+      mark_quiz_v2_email_sent: {
+        Args: { p_id: string; p_resend_message_id: string }
+        Returns: undefined
+      }
       submit_quiz: {
         Args: {
           p_answers: Json
@@ -88,6 +230,13 @@ export type Database = {
           p_user_agent?: string
         }
         Returns: string
+      }
+      unsubscribe_quiz_v2_by_token: {
+        Args: { p_token: string }
+        Returns: {
+          affected_email: string
+          affected_rows: number
+        }[]
       }
     }
     Enums: {
